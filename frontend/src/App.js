@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_URL = 'http://localhost:3000/tasks';
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  (window.location.hostname === 'localhost' ? 'http://localhost:3000' : '/api');
+
+const API_URL = `${API_BASE_URL}/tasks`;
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -65,20 +69,6 @@ function App() {
       setFormDescription('');
       setFormPriority('medium');
       setError(null);
-      await fetchTasks();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  // Mark task complete
-  const handleComplete = async (taskId) => {
-    try {
-      const response = await fetch(`${API_URL}/${taskId}/complete`, {
-        method: 'PATCH',
-      });
-
-      if (!response.ok) throw new Error('Failed to complete task');
       await fetchTasks();
     } catch (err) {
       setError(err.message);
