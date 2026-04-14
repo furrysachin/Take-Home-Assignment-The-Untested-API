@@ -287,6 +287,14 @@ describe('Task API - Integration Tests', () => {
       expect(res.body.completedAt).not.toBeNull();
     });
 
+    it('should PRESERVE priority when marking task as complete - BUG CHECK', async () => {
+      const res = await request(app).patch(`/tasks/${taskId}/complete`);
+
+      expect(res.status).toBe(200);
+      // BUG: Priority is being reset to 'medium' instead of preserving 'high'
+      expect(res.body.priority).toBe('high'); // This might FAIL - indicates a bug
+    });
+
     it('should return 404 if task does not exist', async () => {
       const res = await request(app).patch('/tasks/nonexistent-id/complete');
 
