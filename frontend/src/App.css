@@ -289,6 +289,17 @@
   align-items: center;
 }
 
+.status-buttons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.status-buttons .btn {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
 .assign-form {
   display: flex;
   gap: 6px;

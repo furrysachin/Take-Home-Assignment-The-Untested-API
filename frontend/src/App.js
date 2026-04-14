@@ -124,6 +124,22 @@ function App() {
     }
   };
 
+  // Update task status
+  const handleUpdateStatus = async (taskId, newStatus) => {
+    try {
+      const response = await fetch(`${API_URL}/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) throw new Error('Failed to update status');
+      await fetchTasks();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   // Get priority badge color
   const getPriorityClass = (priority) => {
     switch (priority) {
@@ -270,14 +286,27 @@ function App() {
                   )}
 
                   <div className="task-actions">
-                    {task.status !== 'done' && (
+                    {/* Status buttons */}
+                    <div className="status-buttons">
                       <button
-                        className="btn btn-small btn-success"
-                        onClick={() => handleComplete(task.id)}
+                        className={`btn btn-small ${task.status === 'todo' ? 'btn-primary' : 'btn-secondary'}`}
+                        onClick={() => handleUpdateStatus(task.id, 'todo')}
                       >
-                        ✓ Complete
+                        Todo
                       </button>
-                    )}
+                      <button
+                        className={`btn btn-small ${task.status === 'in_progress' ? 'btn-primary' : 'btn-secondary'}`}
+                        onClick={() => handleUpdateStatus(task.id, 'in_progress')}
+                      >
+                        In Progress
+                      </button>
+                      <button
+                        className={`btn btn-small ${task.status === 'done' ? 'btn-success' : 'btn-secondary'}`}
+                        onClick={() => handleUpdateStatus(task.id, 'done')}
+                      >
+                        ✓ Done
+                      </button>
+                    </div>
 
                     {assigningId === task.id ? (
                       <div className="assign-form">
